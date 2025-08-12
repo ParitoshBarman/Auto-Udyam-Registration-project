@@ -1,0 +1,32 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+
+model Registration {
+  id             Int      @id @default(autoincrement())
+  aadhaar        String   @db.VarChar(12)
+  pan            String?   @db.VarChar(10) // PAN has fixed format: ABCDE1234F
+  ownerName      String?  @db.VarChar(100)
+  address        String?  @db.VarChar(255)
+  pinCode        String?   @db.VarChar(6)
+  city           String?  @db.VarChar(100)
+  state          String?  @db.VarChar(100)
+  declarationA   Boolean  @default(false)
+  step           Int
+  rawPayload     Json?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}

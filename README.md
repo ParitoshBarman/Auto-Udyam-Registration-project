@@ -349,8 +349,8 @@ pip install -r requirements.txt
 
 | Screenshot Name      | Description | Screenshot |
 |----------------------|-------------|------------|
-| Step1_form           | First step of Udyam Registration — basic details including Aadhaar & OTP validation. | ![Step1_form](./screenshots/Step1_form.png) |
-| Step2_form           | Second step of Udyam Registration — PAN validation and additional enterprise details. | ![Step2_form](./screenshots/Step2_form.png) |
+| Step1_form           | First step of Udyam Registration — basic details including Aadhaar & PAN and validation. | ![Step1_form](./screenshots/Step1_form.png) |
+| Step2_form           | Second step of Udyam Registration — PIN Code validation and additional enterprise details. And auto fill | ![Step2_form](./screenshots/Step2_form.png) |
 | suggest_address      | Auto-fill suggestion feature for city/state fields based on PIN code API. | ![suggest_address](./screenshots/suggest_address.png) |
 | successful_submit    | Confirmation popup after successful form submission to backend. | ![successful_submit](./screenshots/successfull_submit.png) |
 | live_form_validation | Demonstrates real-time validation for Aadhaar, PAN, and other fields based on predefined rules. | ![live_form_validation](./screenshots/live_form_validation.png) |

@@ -19,7 +19,7 @@ const DataList: React.FC = () => {
     const fetchData = async () => {
         try {
             setLoading(true);
-            const res = await axios.get("http://localhost:4000/api/registration/all");
+            const res = await axios.get("https://auto-udyam-registration-backend-railway-production.up.railway.app/api/registration/all");
             if (res.data.ok) {
                 setData(res.data.data);
             }

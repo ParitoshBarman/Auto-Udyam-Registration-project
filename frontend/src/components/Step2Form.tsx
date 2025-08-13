@@ -207,7 +207,7 @@ const Step2: React.FC<Step2Props> = ({ onBack, onSubmit, setProgress, setIsModal
                                     pinCode: data.pincode, // ✅ rename key for backend
                                 };
                                 const res = await axios.post(
-                                    "http://localhost:4000/api/registration/submit", // replace with your API URL
+                                    "https://auto-udyam-registration-backend-railway-production.up.railway.app/api/registration/submit", // replace with your API URL
                                     payload
                                 );
 

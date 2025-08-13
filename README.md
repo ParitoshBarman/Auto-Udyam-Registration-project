@@ -12,7 +12,7 @@ A complete **Udyam Registration Automation** system built with **React (TypeScri
 
 - **GitHub Repository:** [Auto-Udyam-Registration-project](https://github.com/ParitoshBarman/Auto-Udyam-Registration-project)
 - **Backend API (Railway):** [https://auto-udyam-backend.up.railway.app](https://auto-udyam-backend.up.railway.app)
-- **Scraper Code:** [View Scraper on GitHub](https://github.com/ParitoshBarman/Auto-Udyam-Registration-project/tree/master/scraper)
+- **Scraper Code:** [View Scraper on GitHub (Documentation)](https://github.com/ParitoshBarman/Auto-Udyam-Registration-project/tree/master/scraper)
 
 ---
 ## 📌 Overview
@@ -41,12 +41,13 @@ This project replicates the **first two steps** of the Udyam Registration proces
 * Real-time **PAN & Aadhaar validation**
 * **Progress bar** to track registration steps
 * **Toast notifications** for form feedback
+* **Auto-fill suggestions** for city/state based on PIN code (using an API `https://api.postalpincode.in/pincode/${pincode}`)
 
 ### 🖥 Backend
 
 * **Node.js + Express**
 * REST API for form submission & data fetching
-* Validation middleware using **express-validator**
+* Validation middleware
 * Data stored in **PostgreSQL** via **Prisma ORM**
 * Unit & integration tests with **Jest** + **Supertest**
 

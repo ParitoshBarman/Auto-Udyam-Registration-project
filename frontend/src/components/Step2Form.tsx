@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { useFormContext } from "../context/FormContext";
+import axios from "axios";
 
 interface Step2Props {
     onBack: () => void;
@@ -29,7 +30,7 @@ const Step2: React.FC<Step2Props> = ({ onBack, onSubmit, setProgress, setIsModal
         Object.keys(updatedData).forEach((key) => {
             if (updatedData[key as keyof typeof data]) filledCount++;
         });
-        setProgress((filledCount / 8) * 100);
+        setProgress((filledCount / 9) * 100);
     };
 
     const validateAll = () => {
@@ -51,8 +52,9 @@ const Step2: React.FC<Step2Props> = ({ onBack, onSubmit, setProgress, setIsModal
 
         try {
             toast.loading("Fetching location...", { id: "pincode" });
-            const res = await fetch(`https://api.postalpincode.in/pincode/${pincode}`);
-            const result = await res.json();
+            const res = await axios(`https://api.postalpincode.in/pincode/${pincode}`);
+            // const result = await res.json();
+            const result = res.data;
             toast.dismiss("pincode");
 
             if (result[0].Status === "Success") {
@@ -93,12 +95,21 @@ const Step2: React.FC<Step2Props> = ({ onBack, onSubmit, setProgress, setIsModal
     };
 
     const handleSelectSuggestion = (s: LocationSuggestion) => {
+        const updated = {
+        ...data,
+        city: s.city,
+        state: s.state,
+        address: s.address
+    };
+
         setData({
             city: s.city,
             state: s.state,
             address: s.address
         });
+
         setSuggestions([]); // close dropdown after selection
+        updateProgress(updated);
         toast.success(`Details auto-filled for: ${s.address}`);
     };
 
@@ -130,7 +141,7 @@ const Step2: React.FC<Step2Props> = ({ onBack, onSubmit, setProgress, setIsModal
             {fields.map((field) => (
                 <div className="form-group" key={field} style={{ position: "relative" }}>
                     <label>{field.toUpperCase()}</label>
-                    <input
+                    {/* <input
                         type="text"
                         value={data[field] || ""}
                         onChange={(e) =>
@@ -141,7 +152,25 @@ const Step2: React.FC<Step2Props> = ({ onBack, onSubmit, setProgress, setIsModal
                         onBlur={field === "pincode" ? handlePincodeBlur : undefined}
                         maxLength={field === "pincode" ? 6 : undefined}
                         className={field === "pincode" && pincodeError ? "error-input" : ""}
+                    /> */}
+                    
+                    <input
+                        type="text"
+                        value={data[field] || ""}
+                        onChange={(e) =>
+                            field === "pincode"
+                                ? handlePincodeChange(e.target.value)
+                                : (() => {
+                                    const updated = { ...data, [field]: e.target.value };
+                                    setData({ [field]: e.target.value });
+                                    updateProgress(updated); // ✅ progress updates for all fields
+                                })()
+                        }
+                        onBlur={field === "pincode" ? handlePincodeBlur : undefined}
+                        maxLength={field === "pincode" ? 6 : undefined}
+                        className={field === "pincode" && pincodeError ? "error-input" : ""}
                     />
+
 
                     {/* Suggestions Dropdown */}
                     {field === "pincode" && suggestions.length > 0 && (
@@ -167,11 +196,43 @@ const Step2: React.FC<Step2Props> = ({ onBack, onSubmit, setProgress, setIsModal
                         opacity: isFormValid ? 1 : 0.6,
                         cursor: isFormValid ? "pointer" : "not-allowed",
                     }}
-                    onClick={() => {
+                    onClick={async () => {
                         if (validateAll()) {
-                            toast.success("Form Submitted!");
-                            onSubmit();
-                            setIsModalOpen(true);
+                            try {
+                                toast.loading("Submitting form...", { id: "formSubmit" });
+
+                                // Send data to backend
+                                let payload = {
+                                    ...data,
+                                    pinCode: data.pincode, // ✅ rename key for backend
+                                };
+                                const res = await axios.post(
+                                    "http://localhost:4000/api/registration/submit", // replace with your API URL
+                                    payload
+                                );
+
+                                toast.dismiss("formSubmit");
+                                toast.success(res.data.message || "Form Submitted Successfully!");
+
+                                onSubmit();
+                                setIsModalOpen(true);
+                                setData({
+                                    name: "",
+                                    mobile: "",
+                                    email: "",
+                                    aadhaar: "",
+                                    pan: "",
+                                    address: "",
+                                    pincode: "",
+                                    city: "",
+                                    state: ""
+                                });
+                                onBack();
+                            } catch (err) {
+                                toast.dismiss("formSubmit");
+                                toast.error("Error submitting form");
+                                console.error(err);
+                            }
                         } else {
                             toast.error("Please fill all details correctly");
                         }

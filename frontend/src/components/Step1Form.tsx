@@ -10,7 +10,8 @@ interface Step1Props {
 const Step1: React.FC<Step1Props> = ({ onNext, setProgress }) => {
     const { data, setData } = useFormContext();
 
-    const fields = ["name", "mobile", "email", "pan"] as const;
+    // Added aadhaar in the fields list
+    const fields = ["name", "mobile", "email", "aadhaar", "pan"] as const;
 
     const updateProgress = (updatedData: typeof data) => {
         let filledCount = 0;
@@ -19,15 +20,21 @@ const Step1: React.FC<Step1Props> = ({ onNext, setProgress }) => {
                 filledCount++;
             }
         });
-        setProgress((filledCount / 8) * 100); // out of total 8 fields
+        setProgress((filledCount / 9) * 100); // out of total 8 fields
     };
 
     const validateField = (field: string, value: string) => {
         switch (field) {
-            case "mobile": return /^\d{10}$/.test(value);
-            case "email": return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
-            case "pan": return /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(value);
-            default: return value.trim().length > 0;
+            case "mobile":
+                return /^\d{10}$/.test(value);
+            case "email":
+                return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+            case "aadhaar":
+                return /^\d{12}$/.test(value); // Aadhaar must be exactly 12 digits
+            case "pan":
+                return /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(value);
+            default:
+                return value.trim().length > 0;
         }
     };
 

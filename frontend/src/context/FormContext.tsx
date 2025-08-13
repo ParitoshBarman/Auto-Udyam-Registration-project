@@ -4,6 +4,7 @@ interface FormData {
     name: string;
     mobile: string;
     email: string;
+    aadhaar: string;
     pan: string;
     address: string;
     pincode: string;
@@ -20,6 +21,7 @@ const defaultData: FormData = {
     name: "",
     mobile: "",
     email: "",
+    aadhaar:"",
     pan: "",
     address: "",
     pincode: "",

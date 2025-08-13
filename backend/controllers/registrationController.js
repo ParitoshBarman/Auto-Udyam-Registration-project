@@ -3,21 +3,23 @@ const prisma = require('../prismaClient');
 async function submitRegistration(req, res) {
     try {
         const payload = req.body || {};
-        const { aadhaar, ownerName, declarationA, step, pan, address, pinCode } = payload;
+        const { aadhaar, ownerName, name, declarationA, step, pan, address, pinCode, pincode, city, state } = payload;
 
-        // Save to DB
         const record = await prisma.registration.create({
             data: {
-                aadhaar: String(aadhaar).trim(),
-                ownerName: ownerName ? ownerName.trim() : null,
-                pan: String(pan).trim(),
-                address: address ? address.trim() : null,
-                pinCode: String(pinCode).trim(),
+                aadhaar: aadhaar ? String(aadhaar).trim() : null,
+                ownerName: (ownerName || name) ? String(ownerName || name).trim() : null,
+                pan: pan ? String(pan).trim() : null,
+                address: address ? String(address).trim() : null,
+                pinCode: String(pinCode || pincode || '').trim() || null,
+                city: city ? String(city).trim() : null,
+                state: state ? String(state).trim() : null,
                 declarationA: !!declarationA,
                 step: Number(step || 1),
                 rawPayload: payload
             }
         });
+
 
         return res.status(201).json({ ok: true, id: record.id });
     } catch (err) {
